@@ -1,9 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    xmlns:weight="http://schemas.android.com/apk/res-auto"
     android:background="@color/black"
     android:paddingHorizontal="20dp">
 
@@ -188,7 +186,7 @@
         android:layout_below="@+id/btnThree"
         android:layout_toEndOf="@+id/btnZero"
         android:padding="10dp"
-        android:text="C"
+        android:text="@string/_C"
         android:textAlignment="center"
         android:textColor="#efefef"
         android:textSize="50sp" />

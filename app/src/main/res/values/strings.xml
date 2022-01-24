@@ -22,4 +22,5 @@
     <string name="closeBracket">)</string>
     <string name="openBracket">(</string>
     <string name="backspace">&lt;-</string>
+    <string name="_C">C</string>
 </resources>

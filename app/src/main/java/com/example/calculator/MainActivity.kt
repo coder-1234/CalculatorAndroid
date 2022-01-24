@@ -4,121 +4,8 @@ import android.os.Bundle
 import android.view.View
 import android.widget.Button
 import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import net.objecthunter.exp4j.ExpressionBuilder
-
-
-/*class MainActivity : AppCompatActivity() {
-
-    private var tvResult:TextView? = null
-    private var lastNumeric = false
-    private var lastDot = false
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main_constraint)
-        tvResult = findViewById(R.id.result)
-    }
-
-    fun onDigitClick(view: View){
-        tvResult?.append((view as Button).text)
-        lastDot = false
-        lastNumeric = true
-    }
-
-    fun onClear(view: View) {
-        tvResult?.text = ""
-    }
-
-    fun onDecimal(view: View) {
-        (tvResult?.text)?.contains('.').let{
-            if(it==false) tvResult?.append('.'.toString())
-            lastDot = true
-        }
-    }
-
-    fun onOperator(view:View){
-        (tvResult?.text)?.let{
-            val tmp = it.toString()
-            if(lastNumeric && !isOperatorAdded((tmp))){
-                tvResult?.append((view as Button).text)
-                lastNumeric = false
-                lastDot = false
-            }
-        }
-    }
-
-    fun onEqual(view: View){
-        if(lastNumeric){
-            var tvVal = tvResult?.text.toString()
-
-            try{
-
-            }catch(e:ArithmeticException){
-                Log.e("MY_ACTIVITY","logs")
-            }
-        }
-    }
-
-    private fun isOperatorAdded(expr: String):Boolean{
-        return if(expr.startsWith("-")){
-            false
-        }
-        else{
-            expr.contains("/")||expr.contains("+")||expr.contains("-")||expr.contains("*")
-        }
-    }
-}
-*/
-/*    fun onDigitClick(view: View) {
-        if (stateError) {
-            txtInput.text = (view as Button).text
-            stateError = false
-        } else {
-            txtInput.append((view as Button).text)
-        }
-        // Set the flag
-        lastNumeric = true
-    }
-
-    fun onDecimalPoint(view: View) {
-        if (lastNumeric && !stateError && !lastDot) {
-            txtInput.append(".")
-            lastNumeric = false
-            lastDot = true
-        }
-    }
-
-    fun onOperator(view: View) {
-        if (lastNumeric && !stateError) {
-            txtInput.append((view as Button).text)
-            lastNumeric = false
-            lastDot = false
-        }
-    }
-
-    fun onClear(view: View) {
-        this.txtInput.text = ""
-        lastNumeric = false
-        stateError = false
-        lastDot = false
-    }
-
-    fun onEqual(view: View) {
-        if (lastNumeric && !stateError) {
-            val txt = txtInput.text.toString()
-            val expression = ExpressionBuilder(txt).build()
-            try {
-                val result = expression.evaluate()
-                txtInput.text = result.toString()
-                lastDot = true
-            } catch (ex: ArithmeticException) {
-                txtInput.text = "Error"
-                stateError = true
-                lastNumeric = false
-            }
-        }
-    }*/
 
 class MainActivity : AppCompatActivity() {
 
@@ -161,16 +48,16 @@ class MainActivity : AppCompatActivity() {
         button7.setOnClickListener{ view -> onDigitClick(view) }
         button8.setOnClickListener{ view -> onDigitClick(view) }
         button9.setOnClickListener{ view -> onDigitClick(view) }
-        buttonOpen.setOnClickListener{ view -> onDigitClick(view) }
-        buttonClose.setOnClickListener{ view -> onDigitClick(view) }
-        buttonBackspace.setOnClickListener{ view -> onBackspace(view) }
+        buttonOpen.setOnClickListener{ view -> onOperator(view) }
+        buttonClose.setOnClickListener{ view -> onOperator(view) }
+        buttonBackspace.setOnClickListener{ onBackspace() }
         buttonPlus.setOnClickListener{ view -> onOperator(view) }
         buttonMinus.setOnClickListener{ view -> onOperator(view) }
         buttonMultiply.setOnClickListener{ view -> onOperator(view) }
         buttonDivide.setOnClickListener{ view -> onOperator(view) }
-        buttonClear.setOnClickListener{ view -> onClear(view) }
-        buttonEqual.setOnClickListener{ view -> onEqual(view) }
-        buttonDecimal.setOnClickListener{ view -> onDecimalPoint(view) }
+        buttonClear.setOnClickListener{ onClear() }
+        buttonEqual.setOnClickListener{ onEqual() }
+        buttonDecimal.setOnClickListener{ onDecimalPoint() }
     }
 
 
@@ -179,7 +66,7 @@ class MainActivity : AppCompatActivity() {
         lastDot = false
     }
 
-    private fun onDecimalPoint(view: View) {
+    private fun onDecimalPoint() {
         if(!lastDot){
             txtInput.append(".")
             lastDot = true
@@ -187,30 +74,46 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun onOperator(view: View) {
-        txtInput.append((view as Button).text)
+        if(txtInput.text=="" || !txtInput.text.endsWith(' ')){
+            txtInput.append(' '.toString())
+            txtInput.append((view as Button).text)
+            txtInput.append(' '.toString())
+        }
+        else if((view as Button).text=="("){
+            txtInput.append(view.text)
+            txtInput.append(' '.toString())
+        }
+        else{
+            txtInput.append((view).text)
+        }
         lastDot = false
     }
 
-    fun onClear(view: View) {
+    fun onClear() {
         this.txtInput.text = ""
         lastDot = false
     }
 
-    private fun onBackspace(view: View) {
+    private fun onBackspace() {
         if(this.txtInput.text!=""){
             if(this.txtInput.text.endsWith('.'))
                 lastDot = false
-            this.txtInput.text = this.txtInput.text.dropLast(1)
+            if(this.txtInput.text.endsWith(' '))
+                this.txtInput.text = this.txtInput.text.dropLast(3)
+            else
+                this.txtInput.text = this.txtInput.text.dropLast(1)
         }
     }
 
-    private fun onEqual(view: View) {
+    private fun onEqual() {
         val txt = txtInput.text.toString()
         try {
-            val expression = ExpressionBuilder(txt).build()
+            val expression = Expression(txt)
+            expression.build()
             val result = expression.evaluate()
             txtInput.text = result.toString()
         } catch (ex: Exception) {
+            Toast.makeText(this,ex.toString(),Toast.LENGTH_LONG).show()
             txtInput.text = getString(R.string.err)
         }
     }
