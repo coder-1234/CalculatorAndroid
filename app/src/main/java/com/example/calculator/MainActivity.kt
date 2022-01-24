@@ -11,6 +11,7 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var txtInput: TextView
     private var lastDot:Boolean = false
+    private var errorState:Boolean = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -62,11 +63,19 @@ class MainActivity : AppCompatActivity() {
 
 
     fun onDigitClick(view: View) {
+        if(errorState){
+            onClear()
+            errorState = false
+        }
         txtInput.append((view as Button).text)
         lastDot = false
     }
 
     private fun onDecimalPoint() {
+        if(errorState){
+            onClear()
+            errorState = false
+        }
         if(!lastDot){
             txtInput.append(".")
             lastDot = true
@@ -74,6 +83,10 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun onOperator(view: View) {
+        if(errorState){
+            onClear()
+            errorState = false
+        }
         if(txtInput.text=="" || !txtInput.text.endsWith(' ')){
             txtInput.append(' '.toString())
             txtInput.append((view as Button).text)
@@ -96,6 +109,10 @@ class MainActivity : AppCompatActivity() {
 
     private fun onBackspace() {
         if(this.txtInput.text!=""){
+            if(errorState){
+                onClear()
+                errorState = false
+            }
             if(this.txtInput.text.endsWith('.'))
                 lastDot = false
             if(this.txtInput.text.endsWith(' '))
@@ -113,8 +130,8 @@ class MainActivity : AppCompatActivity() {
             val result = expression.evaluate()
             txtInput.text = result.toString()
         } catch (ex: Exception) {
-            Toast.makeText(this,ex.toString(),Toast.LENGTH_LONG).show()
             txtInput.text = getString(R.string.err)
+            errorState = true
         }
     }
 }
