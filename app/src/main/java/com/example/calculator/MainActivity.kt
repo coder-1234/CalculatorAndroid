@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.View
 import android.widget.Button
 import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import net.objecthunter.exp4j.ExpressionBuilder
 
@@ -124,6 +125,7 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var txtInput: TextView
     private var lastDot:Boolean = false
+    private var errorState: Boolean = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -168,18 +170,26 @@ class MainActivity : AppCompatActivity() {
         buttonMinus.setOnClickListener{ view -> onOperator(view) }
         buttonMultiply.setOnClickListener{ view -> onOperator(view) }
         buttonDivide.setOnClickListener{ view -> onOperator(view) }
-        buttonClear.setOnClickListener{ view -> onClear(view) }
+        buttonClear.setOnClickListener{ onClear() }
         buttonEqual.setOnClickListener{ view -> onEqual(view) }
-        buttonDecimal.setOnClickListener{ view -> onDecimalPoint(view) }
+        buttonDecimal.setOnClickListener{ onDecimalPoint() }
     }
 
 
     fun onDigitClick(view: View) {
+        if(errorState){
+            onClear()
+            errorState = false
+        }
         txtInput.append((view as Button).text)
         lastDot = false
     }
 
-    private fun onDecimalPoint(view: View) {
+    private fun onDecimalPoint() {
+        if(errorState){
+            onClear()
+            errorState = false
+        }
         if(!lastDot){
             txtInput.append(".")
             lastDot = true
@@ -187,17 +197,25 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun onOperator(view: View) {
+        if(errorState){
+            onClear()
+            errorState = false
+        }
         txtInput.append((view as Button).text)
         lastDot = false
     }
 
-    fun onClear(view: View) {
+    fun onClear() {
         this.txtInput.text = ""
         lastDot = false
     }
 
     private fun onBackspace(view: View) {
         if(this.txtInput.text!=""){
+            if(errorState){
+                onClear()
+                errorState = false
+            }
             if(this.txtInput.text.endsWith('.'))
                 lastDot = false
             this.txtInput.text = this.txtInput.text.dropLast(1)
@@ -212,6 +230,7 @@ class MainActivity : AppCompatActivity() {
             txtInput.text = result.toString()
         } catch (ex: Exception) {
             txtInput.text = getString(R.string.err)
+            errorState = true
         }
     }
 }
