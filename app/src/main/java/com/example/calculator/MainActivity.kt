@@ -6,59 +6,42 @@ import android.widget.Button
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import com.example.calculator.databinding.ActivityMainConstraintBinding
 
 class MainActivity : AppCompatActivity() {
 
     private lateinit var txtInput: TextView
     private var lastDot:Boolean = false
     private var errorState:Boolean = false
+    private lateinit var bind: ActivityMainConstraintBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main_constraint)
-        txtInput = findViewById(R.id.result)
-
-        val button0 = findViewById<Button>(R.id.btnZero)
-        val button1 = findViewById<Button>(R.id.btnOne)
-        val button2 = findViewById<Button>(R.id.btnTwo)
-        val button3 = findViewById<Button>(R.id.btnThree)
-        val button4 = findViewById<Button>(R.id.btnFour)
-        val button5 = findViewById<Button>(R.id.btnFive)
-        val button6 = findViewById<Button>(R.id.btnSix)
-        val button7 = findViewById<Button>(R.id.btnSeven)
-        val button8 = findViewById<Button>(R.id.btnEight)
-        val button9 = findViewById<Button>(R.id.btnNine)
-        val buttonOpen = findViewById<Button>(R.id.btnOpenBracket)
-        val buttonClose = findViewById<Button>(R.id.btnCloseBracket)
-        val buttonBackspace = findViewById<Button>(R.id.btnBackspace)
-        val buttonPlus = findViewById<Button>(R.id.btnAdd)
-        val buttonMinus = findViewById<Button>(R.id.btnSub)
-        val buttonMultiply = findViewById<Button>(R.id.btnMultiply)
-        val buttonDivide = findViewById<Button>(R.id.btnDiv)
-        val buttonClear = findViewById<Button>(R.id.btnCLR)
-        val buttonEqual = findViewById<Button>(R.id.btnEqual)
-        val buttonDecimal = findViewById<Button>(R.id.btnDecimal)
-
-        button0.setOnClickListener{ view -> onDigitClick(view) }
-        button1.setOnClickListener{ view -> onDigitClick(view) }
-        button2.setOnClickListener{ view -> onDigitClick(view) }
-        button3.setOnClickListener{ view -> onDigitClick(view) }
-        button4.setOnClickListener{ view -> onDigitClick(view) }
-        button5.setOnClickListener{ view -> onDigitClick(view) }
-        button6.setOnClickListener{ view -> onDigitClick(view) }
-        button7.setOnClickListener{ view -> onDigitClick(view) }
-        button8.setOnClickListener{ view -> onDigitClick(view) }
-        button9.setOnClickListener{ view -> onDigitClick(view) }
-        buttonOpen.setOnClickListener{ view -> onOperator(view) }
-        buttonClose.setOnClickListener{ view -> onOperator(view) }
-        buttonBackspace.setOnClickListener{ onBackspace() }
-        buttonPlus.setOnClickListener{ view -> onOperator(view) }
-        buttonMinus.setOnClickListener{ view -> onOperator(view) }
-        buttonMultiply.setOnClickListener{ view -> onOperator(view) }
-        buttonDivide.setOnClickListener{ view -> onOperator(view) }
-        buttonClear.setOnClickListener{ onClear() }
-        buttonEqual.setOnClickListener{ onEqual() }
-        buttonDecimal.setOnClickListener{ onDecimalPoint() }
+        bind = ActivityMainConstraintBinding.inflate(layoutInflater)
+        setContentView(bind.root)
+        with(bind){
+            txtInput = result
+            btnZero.setOnClickListener{ view -> onDigitClick(view) }
+            btnOne.setOnClickListener{ view -> onDigitClick(view) }
+            btnTwo.setOnClickListener{ view -> onDigitClick(view) }
+            btnThree.setOnClickListener{ view -> onDigitClick(view) }
+            btnFour.setOnClickListener{ view -> onDigitClick(view) }
+            btnFive.setOnClickListener{ view -> onDigitClick(view) }
+            btnSix.setOnClickListener{ view -> onDigitClick(view) }
+            btnSeven.setOnClickListener{ view -> onDigitClick(view) }
+            btnEight.setOnClickListener{ view -> onDigitClick(view) }
+            btnNine.setOnClickListener{ view -> onDigitClick(view) }
+            btnOpenBracket.setOnClickListener{ view -> onOperator(view) }
+            btnCloseBracket.setOnClickListener{ view -> onOperator(view) }
+            btnBackspace.setOnClickListener{ onBackspace() }
+            btnAdd.setOnClickListener{ view -> onOperator(view) }
+            btnSub.setOnClickListener{ view -> onOperator(view) }
+            btnMultiply.setOnClickListener{ view -> onOperator(view) }
+            btnDiv.setOnClickListener{ view -> onOperator(view) }
+            btnCLR.setOnClickListener{ onClear() }
+            btnEqual.setOnClickListener{ onEqual() }
+            btnDecimal.setOnClickListener{ onDecimalPoint() }
+        }
     }
 
 
@@ -83,17 +66,15 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun onOperator(view: View) {
-        var btnText = (view as Button).text
+        val btnText = (view as Button).text
         if(errorState){
             onClear()
             errorState = false
         }
         if(txtInput.text.isEmpty()){
-            Toast.makeText(this,"bye",Toast.LENGTH_LONG).show()
             txtInput.text=btnText
         }
         else if(!txtInput.text.endsWith(' ')){
-            Toast.makeText(this,txtInput.text,Toast.LENGTH_LONG).show()
             txtInput.append(' '.toString())
             txtInput.append(btnText)
             txtInput.append(' '.toString())
@@ -103,7 +84,6 @@ class MainActivity : AppCompatActivity() {
             txtInput.append(' '.toString())
         }
         else{
-            Toast.makeText(this,"cool",Toast.LENGTH_LONG).show()
             txtInput.append(btnText)
         }
         lastDot = false

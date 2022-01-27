@@ -4,7 +4,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".MainActivity">
+    tools:context=".MainActivity"
+    tools:viewBindingIgnore="true">
 
     <TextView
         android:id="@+id/result"
@@ -213,12 +214,12 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:text="@string/dot"
-            android:onClick="onDecimal"
+            android:onClick="onDecimalPoint"
             android:padding="10dp"
             android:textSize="20sp"
             android:backgroundTint="@color/btnColor"
             android:layout_margin="2dp"
-            tools:ignore="UsingOnClickInXml" />
+            tools:ignore="OnClick,UsingOnClickInXml" />
 
         <Button
             android:id= "@+id/btnZero"
@@ -244,7 +245,7 @@
             android:textSize="20sp"
             android:backgroundTint="@color/btnColor"
             android:layout_margin="2dp"
-            tools:ignore="UsingOnClickInXml" />
+            tools:ignore="OnClick,UsingOnClickInXml" />
 
         <Button
             android:id= "@+id/btnSub"
