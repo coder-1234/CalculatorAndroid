@@ -83,42 +83,49 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun onOperator(view: View) {
+        var btnText = (view as Button).text
         if(errorState){
             onClear()
             errorState = false
         }
-        if(txtInput.text=="" || !txtInput.text.endsWith(' ')){
+        if(txtInput.text.isEmpty()){
+            Toast.makeText(this,"bye",Toast.LENGTH_LONG).show()
+            txtInput.text=btnText
+        }
+        else if(!txtInput.text.endsWith(' ')){
+            Toast.makeText(this,txtInput.text,Toast.LENGTH_LONG).show()
             txtInput.append(' '.toString())
-            txtInput.append((view as Button).text)
+            txtInput.append(btnText)
             txtInput.append(' '.toString())
         }
-        else if((view as Button).text=="("){
-            txtInput.append(view.text)
+        else if(btnText=="("){
+            txtInput.append(btnText)
             txtInput.append(' '.toString())
         }
         else{
-            txtInput.append((view).text)
+            Toast.makeText(this,"cool",Toast.LENGTH_LONG).show()
+            txtInput.append(btnText)
         }
         lastDot = false
     }
 
     fun onClear() {
-        this.txtInput.text = ""
+        txtInput.text = ""
         lastDot = false
     }
 
     private fun onBackspace() {
-        if(this.txtInput.text!=""){
+        if(txtInput.text!=""){
             if(errorState){
                 onClear()
                 errorState = false
             }
-            if(this.txtInput.text.endsWith('.'))
+            if(txtInput.text.endsWith('.'))
                 lastDot = false
-            if(this.txtInput.text.endsWith(' '))
-                this.txtInput.text = this.txtInput.text.dropLast(3)
+            if(txtInput.text.endsWith(' '))
+                txtInput.text = txtInput.text.dropLast(3)
             else
-                this.txtInput.text = this.txtInput.text.dropLast(1)
+                txtInput.text = txtInput.text.dropLast(1)
         }
     }
 
